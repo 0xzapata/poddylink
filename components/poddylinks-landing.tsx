@@ -23,8 +23,8 @@ export function PoddylinksLanding() {
           >
             How It Works
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#pricing">
-            Pricing
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/sign-in">
+            Sign In
           </Link>
         </nav>
       </header>
@@ -42,7 +42,9 @@ export function PoddylinksLanding() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button>Get Started</Button>
+                <Button asChild>
+                  <Link href="/sign-in">Get Started</Link>
+                </Button>
                 <Button variant="outline">Learn More</Button>
               </div>
             </div>
@@ -115,85 +117,6 @@ export function PoddylinksLanding() {
                 </p>
               </li>
             </ol>
-          </div>
-        </section>
-        <section
-          id="pricing"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800"
-        >
-          <div className="px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 font-heading">
-              Simple, Transparent Pricing
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Basic</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-4xl font-bold">$9/mo</p>
-                  <ul className="mt-4 space-y-2">
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />1 PoddyLink
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Basic Analytics
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Email Support
-                    </li>
-                  </ul>
-                  <Button className="w-full mt-6">Choose Basic</Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Pro</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-4xl font-bold">$19/mo</p>
-                  <ul className="mt-4 space-y-2">
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />5 PoddyLinks
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Advanced Analytics
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Priority Support
-                    </li>
-                  </ul>
-                  <Button className="w-full mt-6">Choose Pro</Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Enterprise</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-4xl font-bold">Custom</p>
-                  <ul className="mt-4 space-y-2">
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Unlimited PoddyLinks
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Custom Analytics
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Dedicated Support
-                    </li>
-                  </ul>
-                  <Button className="w-full mt-6">Contact Sales</Button>
-                </CardContent>
-              </Card>
-            </div>
           </div>
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32">

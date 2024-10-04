@@ -1,5 +1,5 @@
 import { PoddylinksLanding } from "@/components/poddylinks-landing";
 
-export default function Page() {
+export default function LandingPage() {
   return <PoddylinksLanding />;
 }
