@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, } from "@/components/ui/dialog"
 import { useRouter } from 'next/navigation'
+import NextLink from "next/link"
+import { SignedIn, UserButton } from '@clerk/nextjs'
 
 // Icons for link types
 export const linkIcons = {
@@ -232,195 +234,207 @@ export function SmartlinkBuilder() {
   };
 
   return (
-    <div className="container mx-auto p-4 grid md:grid-cols-2 gap-8">
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Poddylink</h2>
-        <div>
-          <Label htmlFor="smartlinkTag">Smartlink Tag</Label>
-          <Input 
-            id="smartlinkTag" 
-            value={formData.smartlinkTag} 
-            onChange={(e) => updateFormData('smartlinkTag', e.target.value)} 
-          />
+    <div className="flex flex-col min-h-screen">
+      <nav className="bg-gray-100 p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <NextLink href="/" className="text-xl font-bold">Poddylink</NextLink>
+          <div className="flex items-center space-x-4">
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
         </div>
-        <div>
-          <Label htmlFor="name">Name</Label>
-          <Input 
-            id="name" 
-            value={formData.name} 
-            onChange={(e) => updateFormData('name', e.target.value)} 
-          />
-        </div>
-        <div className="w-full">
-          <Label htmlFor="coverPhoto">Cover Photo</Label>
-          <Input 
-            id="coverPhoto" 
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, 'coverPhoto')}
-            className="w-full"
-          />
-        </div>
-        <div className="w-full">
-          <Label htmlFor="logo">Logo</Label>
-          <Input 
-            id="logo" 
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, 'logo')}
-            className="w-full"
-          />
-        </div>
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <Textarea 
-            id="description" 
-            value={formData.description} 
-            onChange={(e) => updateFormData('description', e.target.value)} 
-          />
-        </div>
-        <div>
-          <Label htmlFor="mainLink">Link</Label>
+      </nav>
+      <div className="container mx-auto p-4 grid md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold">Create Smartlink</h2>
+          <div>
+            <Label htmlFor="smartlinkTag">Smartlink Tag</Label>
+            <Input 
+              id="smartlinkTag" 
+              value={formData.smartlinkTag} 
+              onChange={(e) => updateFormData('smartlinkTag', e.target.value)} 
+            />
+          </div>
+          <div>
+            <Label htmlFor="name">Name</Label>
+            <Input 
+              id="name" 
+              value={formData.name} 
+              onChange={(e) => updateFormData('name', e.target.value)} 
+            />
+          </div>
+          <div className="w-full">
+            <Label htmlFor="coverPhoto">Cover Photo</Label>
+            <Input 
+              id="coverPhoto" 
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, 'coverPhoto')}
+              className="w-full"
+            />
+          </div>
+          <div className="w-full">
+            <Label htmlFor="logo">Logo</Label>
+            <Input 
+              id="logo" 
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, 'logo')}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <Textarea 
+              id="description" 
+              value={formData.description} 
+              onChange={(e) => updateFormData('description', e.target.value)} 
+            />
+          </div>
+          <div>
+            <Label htmlFor="mainLink">Link</Label>
+            <div className="space-y-2">
+              {formData.mainLinks.map((link, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Input value={link.url} readOnly />
+                  <Button variant="outline" size="icon" onClick={() => editMainLink(index)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button variant="destructive" size="icon" onClick={() => removeMainLink(index)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <div className="flex space-x-2">
+                <Input 
+                  id="mainLink" 
+                  value={newMainLink.url} 
+                  onChange={(e) => setNewMainLink(prev => ({ ...prev, url: e.target.value }))} 
+                  placeholder="Enter link URL"
+                />
+                <Select 
+                  value={newMainLink.type} 
+                  onValueChange={(value: LinkType) => setNewMainLink(prev => ({ ...prev, type: value }))}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(linkIcons).map((icon) => (
+                      <SelectItem key={icon} value={icon}>
+                        {icon}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button onClick={addMainLink}>
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  Add
+                </Button>
+              </div>
+            </div>
+          </div>
           <div className="space-y-2">
-            {formData.mainLinks.map((link, index) => (
+            <Label>Episode Links</Label>
+            {formData.links.map((link, index) => (
               <div key={index} className="flex items-center space-x-2">
-                <Input value={link.url} readOnly />
-                <Button variant="outline" size="icon" onClick={() => editMainLink(index)}>
+                <Input value={`${link.episodeName} - ${link.url}`} readOnly />
+                <Button variant="outline" size="icon" onClick={() => editLink(index)}>
                   <Edit className="h-4 w-4" />
                 </Button>
-                <Button variant="destructive" size="icon" onClick={() => removeMainLink(index)}>
+                <Button variant="destructive" size="icon" onClick={() => removeLink(index)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             ))}
-            <div className="flex space-x-2">
-              <Input 
-                id="mainLink" 
-                value={newMainLink.url} 
-                onChange={(e) => setNewMainLink(prev => ({ ...prev, url: e.target.value }))} 
-                placeholder="Enter link URL"
-              />
-              <Select 
-                value={newMainLink.type} 
-                onValueChange={(value: LinkType) => setNewMainLink(prev => ({ ...prev, type: value }))}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(linkIcons).map((icon) => (
-                    <SelectItem key={icon} value={icon}>
-                      {icon}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button onClick={addMainLink}>
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Add
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label>Episode Links</Label>
-          {formData.links.map((link, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <Input value={`${link.episodeName} - ${link.url}`} readOnly />
-              <Button variant="outline" size="icon" onClick={() => editLink(index)}>
-                <Edit className="h-4 w-4" />
-              </Button>
-              <Button variant="destructive" size="icon" onClick={() => removeLink(index)}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-          {formData.links.length > 0 && <div className="h-6" />} {/* Add space if there are links */}
-          <div className="space-y-2">
-            <Input
-              value={newLink.episodeName}
-              onChange={(e) => setNewLink({ ...newLink, episodeName: e.target.value })}
-              placeholder="Enter episode name"
-            />
-            <div className="flex items-center space-x-2">
+            {formData.links.length > 0 && <div className="h-6" />} {/* Add space if there are links */}
+            <div className="space-y-2">
               <Input
-                value={newLink.url}
-                onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                placeholder="Enter link URL"
+                value={newLink.episodeName}
+                onChange={(e) => setNewLink({ ...newLink, episodeName: e.target.value })}
+                placeholder="Enter episode name"
               />
-              <Button onClick={addLink}>
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Add
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Input
+                  value={newLink.url}
+                  onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                  placeholder="Enter link URL"
+                />
+                <Button onClick={addLink}>
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  Add
+                </Button>
+              </div>
             </div>
           </div>
+          <Button onClick={publishSmartlink} className="w-full">
+            Publish Smartlink
+          </Button>
         </div>
-        <Button onClick={publishSmartlink} className="w-full">
-          Publish Smartlink
-        </Button>
-      </div>
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Preview</h2>
-        <Card className="overflow-hidden">
-          <CardHeader className="p-0">
-            {formData.coverPhoto && (
-              <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url(${formData.coverPhoto})` }} />
-            )}
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-4 mb-6">
-              {formData.logo && <img src={formData.logo} alt="Logo" className="w-20 h-20 rounded-full shadow-md" />}
-              <div>
-                <CardTitle className="text-2xl mb-2">{formData.name || "Your Name"}</CardTitle>
-                <p className="text-gray-600">{formData.description || "Your description here"}</p>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold">Preview</h2>
+          <Card className="overflow-hidden">
+            <CardHeader className="p-0">
+              {formData.coverPhoto && (
+                <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url(${formData.coverPhoto})` }} />
+              )}
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-4 mb-6">
+                {formData.logo && <img src={formData.logo} alt="Logo" className="w-20 h-20 rounded-full shadow-md" />}
+                <div>
+                  <CardTitle className="text-2xl mb-2">{formData.name || "Your Name"}</CardTitle>
+                  <p className="text-gray-600">{formData.description || "Your description here"}</p>
+                </div>
               </div>
-            </div>
-            {formData.mainLinks.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Links</h3>
-                {formData.mainLinks.map((link, index) => (
-                  <a
-                    key={index}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block mb-2 p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="bg-white p-2 rounded-full shadow-sm">
-                        {linkIcons[link.type]}
-                      </div>
-                      <span className="font-semibold">Listen on {link.type}</span>
-                      <Check className="h-4 w-4 ml-auto text-green-500" />
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-            {formData.links.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Episodes</h3>
-                <div className="space-y-2">
-                  {formData.links.map((link, index) => (
+              {formData.mainLinks.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">Links</h3>
+                  {formData.mainLinks.map((link, index) => (
                     <a
                       key={index}
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="block mb-2 p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                     >
-                      <div className="bg-white p-2 rounded-full shadow-sm">
-                        {linkIcons[link.icon]}
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-white p-2 rounded-full shadow-sm">
+                          {linkIcons[link.type]}
+                        </div>
+                        <span className="font-semibold">Listen on {link.type}</span>
+                        <Check className="h-4 w-4 ml-auto text-green-500" />
                       </div>
-                      <span className="flex-grow">{link.episodeName}</span>
-                      <span className="text-blue-500 hover:underline">{new URL(link.url).hostname}</span>
                     </a>
                   ))}
                 </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              )}
+              {formData.links.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Episodes</h3>
+                  <div className="space-y-2">
+                    {formData.links.map((link, index) => (
+                      <a
+                        key={index}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        <div className="bg-white p-2 rounded-full shadow-sm">
+                          {linkIcons[link.icon]}
+                        </div>
+                        <span className="flex-grow">{link.episodeName}</span>
+                        <span className="text-blue-500 hover:underline">{new URL(link.url).hostname}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
       <EditDialog
         isOpen={isEditDialogOpen}

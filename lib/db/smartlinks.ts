@@ -8,7 +8,7 @@ export async function getSmartlinksServer() {
   
   const { data, error } = await supabase
     .from('smartlinks')
-    .select('id, smartlink_tag, name')
+    .select('id, smartlink_tag, name, visits')
     .order('created_at', { ascending: false });
 
   if (error) {
