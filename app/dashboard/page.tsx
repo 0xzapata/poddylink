@@ -1,5 +1,4 @@
 import { getSmartlinksServer } from "@/lib/db/smartlinks";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Link, Search, TrendingUp, Users, Plus, Eye } from "lucide-react"
+import { Search, Plus, Eye } from "lucide-react"
 import NextLink from "next/link"
 import { Toaster } from "@/components/ui/toaster"
 import { DeleteButton } from "@/app/components/DeleteButton"
