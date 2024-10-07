@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server';
 import { deleteSmartlinkServer, getSmartlink, createSmartlink, updateSmartlink } from "@/lib/db/smartlinks";
+import { auth } from "@clerk/nextjs/server";
 
 export async function DELETE(request: Request) {
+  const { userId } = auth();
+  
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { id } = await request.json();
   
   try {
-    await deleteSmartlinkServer(id);
+    await deleteSmartlinkServer(id, userId);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting smartlink:', error);
@@ -31,10 +38,16 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const { userId } = auth();
+  
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const formData = await request.json();
 
   try {
-    const smartlink = await createSmartlink(formData);
+    const smartlink = await createSmartlink(formData, userId);
     return NextResponse.json({ id: smartlink.id });
   } catch (error) {
     console.error('Error creating smartlink:', error);
@@ -44,9 +57,14 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const { id, ...formData } = await request.json();
+  const { userId } = auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   try {
-    const smartlink = await updateSmartlink(id, formData);
+    const smartlink = await updateSmartlink(id, formData, userId);
     return NextResponse.json(smartlink);
   } catch (error) {
     console.error('Error updating smartlink:', error);

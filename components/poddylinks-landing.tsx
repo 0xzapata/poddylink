@@ -75,7 +75,7 @@ export function PoddylinksLanding() {
                   <CardTitle>Detailed Analytics</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  Track clicks, geographic data, and platform preferences to optimize your podcast's
+                  Track clicks, geographic data, and platform preferences to optimize your podcasts
                   reach.
                 </CardContent>
               </Card>

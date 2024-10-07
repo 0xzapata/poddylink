@@ -15,9 +15,16 @@ import { Toaster } from "@/components/ui/toaster"
 import { DeleteButton } from "@/app/components/DeleteButton"
 import { Badge } from "@/components/ui/badge";
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { auth } from "@clerk/nextjs/server";
 
 export default async function Dashboard() {
-  const smartlinks = await getSmartlinksServer();
+  const { userId } = auth();
+  
+  if (!userId) {
+    return <div>Please sign in to view your smartlinks.</div>;
+  }
+
+  const smartlinks = await getSmartlinksServer(userId);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -81,7 +88,9 @@ export default async function Dashboard() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <DeleteButton id={smartlink.id} name={smartlink.name} />
+                      <div className="flex space-x-2">
+                        <DeleteButton id={smartlink.id} name={smartlink.name} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

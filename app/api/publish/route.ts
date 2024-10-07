@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 
 // This would be replaced with a database in a real application
-const publishedSmartlinks: Record<string, any> = {}
+const publishedSmartlinks: Record<string, unknown> = {}
 
 export async function POST(request: Request) {
   const smartlinkData = await request.json()
@@ -22,5 +22,3 @@ export async function GET(request: Request) {
 
   return NextResponse.json(publishedSmartlinks[id])
 }
-
-// ... rest of the file
